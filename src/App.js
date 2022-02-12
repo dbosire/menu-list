@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Menu from "./Menu";
 import Categories from "./Categories";
 import items from "./data";
 import logo from "./logo.JPG";
 
-const allCategories = ["all", ...new Set(items.map((item) => item.category))];
+const allCategories = [
+  "all",
+  ...new Set(items.map((item) => item.category)),
+  "Cart",
+];
 
 const App = () => {
   const [menuItems, setMenuItems] = useState(items);
   const [activeCategory, setActiveCategory] = useState("");
   const [categories, setCategories] = useState(allCategories);
+  const [itemCount, setItemCount] = useState(0);
+  const [cartorders, setCartorders] = useState([]);
 
   const filterItems = (category) => {
     setActiveCategory(category);
@@ -20,6 +26,27 @@ const App = () => {
     const newItems = items.filter((item) => item.category === category);
     setMenuItems(newItems);
   };
+
+  //get all orders
+  const getOrderCart = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/getorders/254716880932"
+      );
+
+      const jsonData = await response.json();
+      //console.log(jsonData);
+      setCartorders(jsonData);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  useEffect(() => {
+    getOrderCart();
+  }, []);
+
+  console.log(cartorders);
+
   return (
     <main>
       <section className="menu section">
@@ -32,6 +59,7 @@ const App = () => {
           categories={categories}
           activeCategory={activeCategory}
           filterItems={filterItems}
+          cartorders={cartorders}
         />
         <Menu items={menuItems} />
       </section>

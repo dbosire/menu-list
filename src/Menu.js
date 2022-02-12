@@ -1,19 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Menu = ({ items }) => {
+  const placeOrderFxn = async (id, title, img, desc, price) => {
+    try {
+      const description = desc;
+      const phonenumber = "254716880932";
+      const product_name = title;
+      const quantity = 1;
+      const total_price = quantity * price;
+      const customer_id = "e69ca842-c4bc-448b-b82b-c34b63b0ebfd";
+      const body = {
+        id,
+        title,
+        img,
+        description,
+        price,
+        product_name,
+        phonenumber,
+        total_price,
+        quantity,
+        customer_id,
+      };
+      const response = await fetch("http://localhost:5000/order/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      window.location = "/";
+      console.log(response);
+      console.log("desc " + description);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const [placeOrder, setPlaceOrder] = useState([]);
+
   return (
     <div className="section-center">
       {items.map((item) => {
         const { id, title, img, desc, price } = item;
+        // console.log("dnb");
+        // console.log(item);
+        // console.log("dnb 2");
+
         return (
           <article key={id} className="menu-item">
             <img src={img} alt={title} className="photo" />
             <div className="item-info">
               <header>
                 <h4>{title}</h4>
-                <h4 className="price">${price}</h4>
+                <h4 className="price">Ksh {price}</h4>
               </header>
               <p className="item-text">{desc}</p>
+              <button
+                type="button"
+                className="btn btn-warning"
+                onClick={() => placeOrderFxn(id, title, img, desc, price)}
+              >
+                Add to Cart
+              </button>
             </div>
           </article>
         );
