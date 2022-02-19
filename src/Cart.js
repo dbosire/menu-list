@@ -97,7 +97,7 @@ const Cart = (props) => {
   const getCartOrder = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/getorders/254716880932"
+        "http://128.199.136.78/getorders/254716880932"
       );
       const jsonData = await response.json();
       setCartorders(jsonData);
@@ -126,7 +126,7 @@ const Cart = (props) => {
 
       <Spinner />;
 
-      const response = await fetch(`http://localhost:5000/lipanampesa`, {
+      const response = await fetch(`http://128.199.136.78/lipanampesa`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
