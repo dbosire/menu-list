@@ -37,7 +37,7 @@ const App = () => {
   const getOrderCart = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/getorders/254716880932"
+        "http://localhost:9000/getorders/254716880932"
       );
       const jsonData = await response.json();
       setCartorders(jsonData);

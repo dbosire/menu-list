@@ -21,7 +21,7 @@ const Menu = ({ items, activeCat, cartorders, activeCategory }) => {
         quantity,
         customer_id,
       };
-      const response = await fetch("http://localhost:5000/order/add", {
+      const response = await fetch("http://localhost:9000/order/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

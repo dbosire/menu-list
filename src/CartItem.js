@@ -47,7 +47,7 @@ export default function CartItem(props) {
         order_id,
       };
       const response = await fetch(
-        `http://localhost:5000/updateOrder/${order_id}`,
+        `http://localhost:9000/updateOrder/${order_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -67,7 +67,7 @@ export default function CartItem(props) {
         order_id,
       };
       const response = await fetch(
-        `http://localhost:5000/deleteItemOrder/${order_id}`,
+        `http://localhost:9000/deleteItemOrder/${order_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -86,7 +86,7 @@ export default function CartItem(props) {
   const getCartOrder = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/getorders/254716880932"
+        "http://localhost:9000/getorders/254716880932"
       );
       const jsonData = await response.json();
       setCartorders(jsonData);
@@ -102,7 +102,7 @@ export default function CartItem(props) {
         order_id,
       };
       const response = await fetch(
-        `http://localhost:5000/removeItem/254716880932/${order_id}`,
+        `http://localhost:9000/removeItem/254716880932/${order_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
