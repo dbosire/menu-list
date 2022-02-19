@@ -7,6 +7,7 @@ const Categories = ({
   filterItems,
   activeCategory,
   cartorders,
+  itemCount,
 }) => {
   return (
     <div className="btn-container">
@@ -21,7 +22,7 @@ const Categories = ({
               key={index}
               onClick={() => filterItems(category)}
             >
-              <Badge color="secondary" badgeContent={cartorders.length}>
+              <Badge color="secondary" badgeContent={itemCount}>
                 <ShoppingCartIcon />{" "}
               </Badge>
             </button>

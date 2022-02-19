@@ -89,6 +89,14 @@ p {
   border-bottom: 2px solid;
 }
 
+.section-center-cart {
+  width: 90vw;
+  margin: 0 auto;
+  max-width: 1170px;
+  display: flex;
+  gap: 3rem 2rem;
+  justify-items: center;
+}
 .section-center {
   width: 90vw;
   margin: 0 auto;

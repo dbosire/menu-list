@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-
-const Menu = ({ items }) => {
+import Cart from "./Cart";
+const Menu = ({ items, activeCat, cartorders, activeCategory }) => {
   const placeOrderFxn = async (id, title, img, desc, price) => {
     try {
       const description = desc;
@@ -27,44 +27,52 @@ const Menu = ({ items }) => {
         body: JSON.stringify(body),
       });
       window.location = "/";
-      console.log(response);
-      console.log("desc " + description);
+      //console.log(response);
+      //console.log("desc " + description);
     } catch (err) {
       console.error(err.message);
     }
   };
-  const [placeOrder, setPlaceOrder] = useState([]);
 
-  return (
-    <div className="section-center">
-      {items.map((item) => {
-        const { id, title, img, desc, price } = item;
-        // console.log("dnb");
-        // console.log(item);
-        // console.log("dnb 2");
+  console.log("categ no : " + cartorders.length);
+  if (activeCat === "Cart") {
+    return (
+      <div className="section-center-cart">
+        <Cart
+          cartorders={cartorders}
+          cartItems={(cartorders.length, (activeCategory = { activeCategory }))}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div className="section-center">
+        {items.map((item) => {
+          const { id, title, img, desc, price } = item;
 
-        return (
-          <article key={id} className="menu-item">
-            <img src={img} alt={title} className="photo" />
-            <div className="item-info">
-              <header>
-                <h4>{title}</h4>
-                <h4 className="price">Ksh {price}</h4>
-              </header>
-              <p className="item-text">{desc}</p>
-              <button
-                type="button"
-                className="btn btn-warning"
-                onClick={() => placeOrderFxn(id, title, img, desc, price)}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </article>
-        );
-      })}
-    </div>
-  );
+          return (
+            <article key={id} className="menu-item">
+              <img src={img} alt={title} className="photo" />
+              <div className="item-info">
+                <header>
+                  <h4>{title}</h4>
+                  <h4 className="price">Ksh {price}</h4>
+                </header>
+                <p className="item-text">{desc}</p>
+                <button
+                  type="button"
+                  className="btn btn-warning"
+                  onClick={() => placeOrderFxn(id, title, img, desc, price)}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    );
+  }
 };
 
 export default Menu;
