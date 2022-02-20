@@ -47,13 +47,14 @@ export default function CartItem(props) {
         order_id,
       };
       const response = await fetch(
-        `http://128.199.136.78/updateOrder/${order_id}`,
+        `http://localhost:9000/updateOrder/${order_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         }
       );
+      console.log(response);
       window.location = "/";
     } catch (err) {
       console.log(err.message);
@@ -67,7 +68,7 @@ export default function CartItem(props) {
         order_id,
       };
       const response = await fetch(
-        `http://128.199.136.78/deleteItemOrder/${order_id}`,
+        `http://localhost:9000/deleteItemOrder/${order_id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -77,6 +78,7 @@ export default function CartItem(props) {
       setCartorders(
         cartorders.filter((cartorder) => cartorder.order_id != order_id)
       );
+      console.log(response);
       window.location = "/";
     } catch (err) {
       console.log(err.message);
@@ -86,7 +88,7 @@ export default function CartItem(props) {
   const getCartOrder = async () => {
     try {
       const response = await fetch(
-        "http://128.199.136.78/getorders/254716880932"
+        "http://localhost:9000/getorders/254716880932"
       );
       const jsonData = await response.json();
       setCartorders(jsonData);
@@ -102,7 +104,7 @@ export default function CartItem(props) {
         order_id,
       };
       const response = await fetch(
-        `http://128.199.136.78/removeItem/254716880932/${order_id}`,
+        `http://localhost:9000/removeItem/254716880932/${order_id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

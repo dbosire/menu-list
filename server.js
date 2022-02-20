@@ -297,7 +297,7 @@ app.post("/lipanampesa", async (req, res) => {
   let partyA = req.body.phonenumberx; //should follow the format:2547xxxxxxxx
   let partyB = bs_short_code;
   let phoneNumber = req.body.phonenumberx; //should follow the format:2547xxxxxxxx
-  let callBackUrl = "https://128.199.136.78:9000/lipa-na-mpesa-callback";
+  let callBackUrl = "https://54.69.38.253:9000/lipa-na-mpesa-callback";
   let accountReference = "DNB Testing";
   let transaction_desc = "Testing lipa na mpesa functionality";
 
