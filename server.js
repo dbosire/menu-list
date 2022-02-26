@@ -101,7 +101,7 @@ app.post("/order/add", async (req, res) => {
     console.log(request_body);
 
     const check = await pool.query(
-      "SELECT * FROM order_items WHERE product_name=$1 AND phonenumber=$2",
+      "SELECT * FROM order_items WHERE product_name=$1 AND phonenumber=$2 AND status='cart'",
       [product_name, phonenumber]
     );
 
