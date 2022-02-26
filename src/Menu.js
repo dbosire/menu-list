@@ -9,6 +9,7 @@ const Menu = ({ items, activeCat, cartorders, activeCategory }) => {
       const quantity = 1;
       const total_price = quantity * price;
       const customer_id = "e69ca842-c4bc-448b-b82b-c34b63b0ebfd";
+      const status = "cart";
       const body = {
         id,
         title,
@@ -20,6 +21,7 @@ const Menu = ({ items, activeCat, cartorders, activeCategory }) => {
         total_price,
         quantity,
         customer_id,
+        status,
       };
       const response = await fetch("http://localhost:9000/order/add", {
         method: "POST",

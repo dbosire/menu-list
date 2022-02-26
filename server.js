@@ -93,6 +93,7 @@ app.post("/order/add", async (req, res) => {
       quantity,
       total_price,
       customer_id,
+      status,
     } = req.body;
 
     const request_body = req.body;
@@ -106,7 +107,7 @@ app.post("/order/add", async (req, res) => {
 
     if (check.rowCount === 0) {
       const response = await pool.query(
-        "INSERT INTO order_items(phonenumber,product_name,price,img,description,title,quantity,total_price,order_request,customer_id,created_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)  RETURNING *",
+        "INSERT INTO order_items(phonenumber,product_name,price,img,description,title,quantity,total_price,order_request,customer_id,created_at,status) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)  RETURNING *",
         [
           phonenumber,
           product_name,
@@ -119,6 +120,7 @@ app.post("/order/add", async (req, res) => {
           request_body,
           customer_id,
           created_at,
+          status,
         ]
       );
       console.log(response.rows);
@@ -140,12 +142,12 @@ app.post("/order/add", async (req, res) => {
     console.error(err.message);
   }
 });
-
+//get all
 app.get("/getorders/:phonenumber", async (req, res) => {
   try {
     const { phonenumber } = req.params;
     const getorders = await pool.query(
-      "SELECT * FROM order_items WHERE phonenumber=$1",
+      "SELECT * FROM order_items WHERE phonenumber=$1 AND status='cart'",
       [phonenumber]
     );
     res.json(getorders.rows);
@@ -275,7 +277,17 @@ app.post("/lipanampesa", async (req, res) => {
   let token = await getOAuthToken();
   console.log("token inside LNM  " + token);
   console.log(req.body.phonenumberx);
+  console.log(req.body);
+  const new_prod_name = req.body.new_product_name;
+  const group_quantity = req.body.group_quantity;
+  const group_order_id = req.body.group_order_id;
+  const status = "in progress";
   let auth = `Bearer ${token}`;
+  const created_at = new Date();
+
+  //generate a random number
+
+  const codex = Math.floor(Math.random() * (999 - 100 + 1) + 100);
 
   //getting the timestamp
   let timestamp = "20220219000016";
@@ -293,12 +305,13 @@ app.post("/lipanampesa", async (req, res) => {
     `${bs_short_code}${passkey}${timestamp}`
   ).toString("base64");
   let transcation_type = "CustomerPayBillOnline";
-  let amount = req.body.price; //you can enter any amount
+  //let amount = req.body.price; //you can enter any amount
+  let amount = 1; //you can enter any amount
   let partyA = req.body.phonenumberx; //should follow the format:2547xxxxxxxx
   let partyB = bs_short_code;
   let phoneNumber = req.body.phonenumberx; //should follow the format:2547xxxxxxxx
   let callBackUrl = "https://54.69.38.253:9000/lipa-na-mpesa-callback";
-  let accountReference = "DNB Testing";
+  let accountReference = partyA + ":" + codex;
   let transaction_desc = "Testing lipa na mpesa functionality";
 
   try {
@@ -323,7 +336,32 @@ app.post("/lipanampesa", async (req, res) => {
         },
       }
     );
-    // .catch(console.log);
+    //.catch(console.log);
+
+    console.log(data);
+
+    //Save record to orders table and update status
+    const response = await pool.query(
+      "INSERT INTO orders(phonenumber,product_name,quantity,total_price,status,created_at,group_item_ids,transaction_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8)  RETURNING *",
+      [
+        partyA,
+        new_prod_name,
+        group_quantity,
+        amount,
+        status,
+        created_at,
+        group_order_id,
+        accountReference,
+      ]
+    );
+
+    const u_id = response.rows[0].id;
+    console.log(u_id);
+    const list_id = req.body.group_order_id.toString();
+    console.log(list_id);
+    const update_resp = await pool.query(
+      `UPDATE order_items SET status='in progress', group_order_id=${u_id} WHERE order_id IN( ${list_id} )`
+    );
 
     return res.send({
       success: true,
@@ -332,12 +370,31 @@ app.post("/lipanampesa", async (req, res) => {
   } catch (err) {
     return res.send({
       success: false,
-      message: err["response"]["statusText"],
+      message: err.message,
     });
   }
 });
 
 //Process callback
+
+//process check phone number
+
+app.post("/check-login", async (req, res) => {
+  try {
+    let phoneno = req.body.phonenumber;
+    let len_phoneno = phoneno.length;
+    phoneno = parseInt(phoneno);
+    if (len_phoneno === 12 && Number.isInteger(phoneno)) {
+      console.log("isAuthenticated: true");
+      res.json({ isAuthenticated: true });
+    } else {
+      console.log("isAuthenticated: false");
+      res.json({ isAuthenticated: false });
+    }
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 app.listen(9000, () => {
   console.log("Server has started on port 9000");

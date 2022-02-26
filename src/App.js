@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Menu from "./Menu";
+import Login from "./Login";
 import Categories from "./Categories";
 import items from "./data";
 import logo from "./logo.JPG";
@@ -8,7 +9,23 @@ const allCategories = [
   "all",
   ...new Set(items.map((item) => item.category)),
   "Cart",
+  "Orders",
 ];
+const isAuthed = localStorage.isAuthed;
+const phonex = localStorage.phoneNum;
+
+console.log(isAuthed);
+console.log("isAuthed");
+console.log(phonex);
+if (
+  isAuthed == "undefined" ||
+  isAuthed == "false" ||
+  isAuthed == "" ||
+  phonex == "" ||
+  phonex == "undefined"
+) {
+  window.location = "/login";
+}
 
 const App = () => {
   const [menuItems, setMenuItems] = useState(items);
@@ -37,7 +54,7 @@ const App = () => {
   const getOrderCart = async () => {
     try {
       const response = await fetch(
-        "http://128.199.136.78/getorders/254716880932"
+        "http://localhost:9000/getorders/254716880932"
       );
       const jsonData = await response.json();
       setCartorders(jsonData);
@@ -48,13 +65,7 @@ const App = () => {
   };
   useEffect(() => {
     getOrderCart();
-    // console.log(itemCount);
   }, []);
-  // console.log("dn ");
-  // console.log(cartorders);
-  // console.log("dn ");
-  // console.log(itemCount);
-  // console.log("cat: " + activeCategory);
 
   return (
     <main>
@@ -105,6 +116,7 @@ const App = () => {
                 </>
               }
             />
+            <Route path="/login" element={<Login />}></Route>
           </Routes>
         </Router>
       </section>

@@ -117,11 +117,29 @@ const Cart = (props) => {
     console.log("submitting " + phonenumberx);
     console.log(cartorders);
     console.log("price " + price);
+    const new_product_name = cartorders.map(
+      (product_name) =>
+        product_name.product_name + " x " + product_name.quantity
+    );
+    const group_order_id = cartorders.map(
+      (product_name) => product_name.order_id
+    );
+    const group_quantity = cartorders.map(
+      (product_name) => product_name.quantity
+    );
 
+    console.log("new_product_name");
+    console.log(new_product_name);
+    console.log(group_order_id);
+    console.log(group_quantity);
+    console.log("new_product_name");
     try {
       const body = {
         phonenumberx,
         price,
+        new_product_name,
+        group_order_id,
+        group_quantity,
       };
 
       <Spinner />;
